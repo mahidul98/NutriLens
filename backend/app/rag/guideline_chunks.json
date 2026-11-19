@@ -1,0 +1,107 @@
+[
+  {
+    "id": "BD2025-GEN-01",
+    "topic": "balanced variety food groups meal diversity",
+    "text": "Eat a well-balanced diet with a variety of foods at each meal. The guideline describes a food-based approach across food groups and encourages dietary diversity.",
+    "source": "National Dietary Guidelines for Bangladesh 2025, General Dietary Guidelines, page 10",
+    "page": 10
+  },
+  {
+    "id": "BD2025-CEREAL-11",
+    "topic": "whole grains rice cereals roots tubers",
+    "text": "Eat adequate amounts of whole-grain cereals, cereal products, starchy roots, tubers and plantains daily. The guideline discusses rice, wheat, chira, muri, whole grains, potatoes and sweet potatoes; unpolished and less-refined grains can provide more fibre and nutrients.",
+    "source": "National Dietary Guidelines for Bangladesh 2025, Guideline 1, page 11",
+    "page": 11
+  },
+  {
+    "id": "BD2025-FAT-18",
+    "topic": "fat oil fried foods cooking oil saturated fat",
+    "text": "Limit intake of foods high in fat and minimize fats and oils in food preparation. Choose healthier preparation methods and avoid excessive use of fats and oils.",
+    "source": "National Dietary Guidelines for Bangladesh 2025, Guideline 2, page 18",
+    "page": 18
+  },
+  {
+    "id": "BD2025-SALT-20",
+    "topic": "salt sodium condiments iodized salt",
+    "text": "Limit intake of salt and condiments and use only iodized salt.",
+    "source": "National Dietary Guidelines for Bangladesh 2025, Guideline 3, page 20",
+    "page": 20
+  },
+  {
+    "id": "BD2025-SUGAR-22",
+    "topic": "sugar sweets sweetened beverages drinks",
+    "text": "Reduce consumption of sugars, sweets and sweetened drinks.",
+    "source": "National Dietary Guidelines for Bangladesh 2025, Guideline 4, page 22",
+    "page": 22
+  },
+  {
+    "id": "BD2025-WATER-24",
+    "topic": "water hydration safe drinking water",
+    "text": "Drink 1.5 to 3.5 litres of pure safe drinking water daily (6 to 14 glasses), as stated in the general dietary guideline.",
+    "source": "National Dietary Guidelines for Bangladesh 2025, Guideline 5, page 24",
+    "page": 24
+  },
+  {
+    "id": "BD2025-COOK-29",
+    "topic": "cooking methods processing preparation safe food",
+    "text": "Follow appropriate preparation and processing techniques and adopt healthy cooking methods.",
+    "source": "National Dietary Guidelines for Bangladesh 2025, Guideline 8, page 29",
+    "page": 29
+  },
+  {
+    "id": "BD2025-PLATE-99",
+    "topic": "healthy plate lunch rice fruit leafy vegetables dal fish meat",
+    "text": "The Bangladesh healthy lunch plate illustration allocates approximately 53% cooked white rice, 7% fruit, 15% leafy/vegetable preparation, 6% fish or meat, 15% mixed vegetables and 4% dal. This is the plate illustration in Annex 2, not a universal measured prescription for every meal or person.",
+    "source": "National Dietary Guidelines for Bangladesh 2025, Annex 2, page 99",
+    "page": 99
+  },
+  {
+    "id": "BD2025-TARGET-05",
+    "topic": "population dietary fat carbohydrate protein sodium salt fruits vegetables energy targets",
+    "text": "The guideline reports population nutrient intake ranges: total fat 15–30% of total energy; saturated fat below 10%; total carbohydrate 55–75%; free sugars below 10%; protein 10–15%; cholesterol below 300 mg/day; salt below 5 g/day (sodium below 2 g/day); fruits and vegetables at least 400 g/day. These are population-level ranges, not individually calculated clinical targets.",
+    "source": "National Dietary Guidelines for Bangladesh 2025, Table 2, page 5",
+    "page": 5
+  },
+  {
+    "id": "BD2025-GROUPS-98",
+    "topic": "food pyramid food groups cereals pulses fish meat eggs dairy vegetables fruit sugar fats",
+    "text": "The Bangladesh food guide pyramid includes cereals, roots and tubers; vegetables and fruits; pulses; fish, meat and eggs; milk and milk products; fats and oils; and sugar. The pyramid indicates adequate intake for staple groups, moderate intake for milk and fats/oils, and sparing use of sugar.",
+    "source": "National Dietary Guidelines for Bangladesh 2025, Annex 1, page 98",
+    "page": 98
+  },
+  {
+    "id": "BD2025-ANNEX8-PROTEIN-FAT-FIBRE",
+    "topic": "Annex 8 protein fat fibre age sex daily requirements adults",
+    "text": "Annex 8.1 (page 107) lists adult protein requirements of 33–66 g/day for males and females aged 19–50 and 51–65+, based on reference body weights of 45–75 kg; fibre is 30 g/day for males and 25 g/day for females. Total fat is 20–35% of total energy for adults aged 19+ (and 25–35% for age 15–18). These are reference requirements for population groups, not individualized clinical prescriptions.",
+    "source": "National Dietary Guidelines for Bangladesh 2025, Annex 8.1, page 107",
+    "page": 107
+  },
+  {
+    "id": "BD2025-ANNEX8-VITAMINS",
+    "topic": "Annex 8 vitamin A thiamine riboflavin niacin B12 folate vitamin C daily requirements",
+    "text": "Annex 8.2 (page 108) lists adult 19–65+ daily requirements: vitamin A 600 mcg REq for males and females; thiamine 1.2 mg male and 1.1 mg female; riboflavin is not specified for adult males and 1.1 mg for females; niacin 16 mg NE male and 14 mg NE female; vitamin B12 2.4 mcg; folate 400 mcg DFE; vitamin C 45 mg. The table lists separate pregnancy and lactation values; these are not used by the healthy-adult estimator.",
+    "source": "National Dietary Guidelines for Bangladesh 2025, Annex 8.2, page 108",
+    "page": 108
+  },
+  {
+    "id": "BD2025-ANNEX8-CALCIUM",
+    "topic": "Annex 8 macrominerals calcium phosphorus age sex requirements",
+    "text": "Annex 8.3 (page 109) lists calcium requirements: 1,000 mg/day for adults aged 19–50; 1,000 mg/day for males and 1,300 mg/day for females aged 51–65; and 1,300 mg/day for adults aged 65+. The age-18 value is 1,300 mg/day. These are reference requirements, not disease-specific targets.",
+    "source": "National Dietary Guidelines for Bangladesh 2025, Annex 8.3, page 109",
+    "page": 109
+  },
+  {
+    "id": "BD2025-ANNEX8-IRON",
+    "topic": "Annex 8 iron dietary bioavailability iron requirements sex age",
+    "text": "Annex 8.3 (page 109) gives iron recommended nutrient intakes according to dietary iron bioavailability (15%, 12%, 10% and 5%). For the 10% column, values for ages 18 and 19–65 are 13.7 mg/day for males and 29.4 mg/day for females. No male value is listed for age 65+. Iron requirements vary substantially with bioavailability and physiological status; the app uses the 10% column only as a transparent general reference and does not provide clinical iron prescriptions.",
+    "source": "National Dietary Guidelines for Bangladesh 2025, Annex 8.3, page 109",
+    "page": 109
+  },
+  {
+    "id": "BD2025-ANNEX8-IODINE-ZINC",
+    "topic": "Annex 8 iodine zinc micronutrient requirements age sex",
+    "text": "Annex 8.4 (page 110) lists iodine at 150 mcg/day for adult males and females aged 19–65+ and zinc requirements that vary by dietary bioavailability: for ages 19–65+, male zinc is 4.2, 7.0 or 14 mg/day and female zinc is 3.0, 4.9 or 9.8 mg/day for high, moderate or low bioavailability respectively. These values are not automatically prescribed by the app.",
+    "source": "National Dietary Guidelines for Bangladesh 2025, Annex 8.4, page 110",
+    "page": 110
+  }
+]

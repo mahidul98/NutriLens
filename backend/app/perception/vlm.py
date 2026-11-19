@@ -1,0 +1,163 @@
+import logging
+
+from google import genai
+from google.genai import types
+
+from ..config import GEMINI_API_KEY, GEMINI_MODEL
+from ..nutrition.foods import load_foods
+from .models import VisionResult
+
+logger = logging.getLogger(__name__)
+
+_client = None
+
+PROMPT = """You identify foods in a photo for a Bangladeshi nutrition app. A nutrient table (the FOOD LIST below) is the ONLY source of numbers, so you must describe what you see in terms of that list.
+Rules:
+1. List every food clearly visible. Never invent items you cannot see.
+2. A single ingredient (rice, an egg, a fish): set dish to an empty string and choose the best matching code.
+3. For a prepared dish, first check whether the FOOD LIST contains a suitable prepared-dish/recipe entry. If it does, use that single entry. Otherwise, split it only into main ingredients that are visually identifiable; do not invent hidden ingredients to make a recipe.
+4. Add cooking oil or ghee only when it is visibly present as a separate food or the image gives strong evidence of a substantial amount. Do not automatically add oil just because a dish is fried or glossy. Avoid double-counting fat already included in a prepared-dish entry.
+5. Prefer a cooked or prepared list entry when one exists; otherwise use the raw entry and set state to the real condition shown.
+6. Use an empty fct_code only when nothing in the list is a reasonable stand-in (for example a packaged sausage); then describe it in name_en.
+7. Ignore sauces in small cups, garnish, plates, cutlery and drinks unless they are a meaningful portion of food.
+8. confidence is your honest certainty from 0 to 1 for the identification and portion estimate together. Use lower values for mixed dishes, occluded foods, uncertain ingredients, and uncertain weights. This is a model confidence estimate, not a calibrated probability.
+8a. Estimate the visible edible portion using plate/bowl scale when possible. Return a sensible rounded estimate (normally nearest 5 g); never imply gram-level measurement precision from a photo.
+9. If the image is a printed menu, set scene_type to "menu" and return no items.
+10. If the image is too dark, blurry, or shows no food, set scene_type to "unusable" or "other", explain in quality_issue, and return no items.
+11. Never omit a main component of the meal (noodles, rice, bread, meat, fish). If no list entry is a reasonable stand-in, still return the item with an empty fct_code, its real name in name_en, and an estimated_grams, so the user can confirm it. If the closest list entry is a clearly different food, prefer the empty code to a wrong match.
+
+FOOD LIST (code | name):
+{vocab}
+"""
+
+
+def _http_options() -> types.HttpOptions:
+    """Time out instead of hanging, and retry Google's temporary 5xx errors."""
+    options = {"timeout": 90_000}  # milliseconds
+    retry = getattr(types, "HttpRetryOptions", None)
+    if retry is not None:
+        options["retry_options"] = retry(
+            attempts=3, initial_delay=1.0, http_status_codes=[500, 502, 503, 504]
+        )
+    try:
+        return types.HttpOptions(**options)
+    except Exception:  # older SDKs without retry support
+        return types.HttpOptions(timeout=options["timeout"])
+
+
+def _get_client(api_key: str | None = None):
+    global _client
+    if api_key:
+        # A visitor's own key: build a fresh client and never cache or share it.
+        return genai.Client(api_key=api_key, http_options=_http_options())
+    if _client is None:
+        if not GEMINI_API_KEY:
+            raise RuntimeError("GEMINI_API_KEY is not set in .env")
+        _client = genai.Client(api_key=GEMINI_API_KEY, http_options=_http_options())
+    return _client
+
+
+def explain_failure(exc: Exception, api_key: str | None = None) -> str:
+    """Turn an API or network error into a short message the user can act on."""
+    if isinstance(exc, RuntimeError) and "GEMINI_API_KEY" in str(exc):
+        return (
+            "No Gemini API key was found. Add GEMINI_API_KEY to the .env file "
+            "in your project folder, then restart the app."
+        )
+
+    code = getattr(exc, "code", None)
+    detail = str(getattr(exc, "message", "") or exc)
+    if GEMINI_API_KEY:
+        detail = detail.replace(GEMINI_API_KEY, "***")  # never echo the key
+    if api_key:
+        detail = detail.replace(api_key, "***")
+    detail = " ".join(detail.split())[:200]
+    lowered = detail.lower()
+
+    if code == 401 or (code in (400, 403) and "api key" in lowered):
+        if api_key:
+            return (
+                "Google rejected the API key you entered. Copy the full key from "
+                "Google AI Studio again, with no spaces or extra characters."
+            )
+        return (
+            "Google rejected the API key. Check GEMINI_API_KEY in .env: it should "
+            "be the full key, with no spaces or extra characters."
+        )
+    if code == 403:
+        return f"Google denied access for this key or model. Details: {detail}"
+    if code == 404:
+        other = "gemini-3.5-flash-lite" if GEMINI_MODEL == "gemini-3.8-flash" else "gemini-3.8-flash"
+        return (
+            f"The model '{GEMINI_MODEL}' is not available to this key. Set "
+            f"GEMINI_MODEL in .env to another current model, for example {other}."
+        )
+    if code == 429:
+        return (
+            "The Gemini quota or rate limit was reached. Wait a minute and try "
+            "again, or check your quota in Google AI Studio."
+        )
+    if isinstance(code, int) and code >= 500:
+        return "Google's Gemini service is busy or temporarily down. Please try again in a moment."
+    if code == 400:
+        return f"Gemini could not process this request. Details: {detail}"
+    if isinstance(exc, ValueError):  # pydantic: the model's reply didn't match the schema
+        return "Gemini returned an answer in an unexpected format. Please try again."
+    if isinstance(exc, TimeoutError) or "timed out" in lowered or "timeout" in lowered:
+        return "The request to Gemini timed out. Check your internet connection and try again."
+    if any(w in lowered for w in ("connect", "resolution", "network", "unreachable")):
+        return "Could not reach Gemini. Check your internet connection."
+    return f"Unexpected error ({type(exc).__name__})."
+
+
+def check_connection(api_key: str | None = None) -> tuple[bool, str]:
+    """Send a tiny text request so users can verify their key and model."""
+    try:
+        client = _get_client(api_key)
+
+        client.models.generate_content(
+            model=GEMINI_MODEL,
+            contents="Reply with the single word: ok"
+        )
+
+    except Exception as exc:
+        logger.warning("Gemini connection test failed: %r", exc)
+        return False, explain_failure(exc, api_key)
+
+    return True, f"Connected. Photo analysis will use {GEMINI_MODEL}."
+
+
+def _vocabulary() -> str:
+    df = load_foods()
+    return "\n".join(f"{c} | {n}" for c, n in zip(df["code"], df["name_en"]))
+
+
+def detect_foods(
+    image_bytes: bytes,
+    mime_type: str = "image/jpeg",
+    api_key: str | None = None
+) -> VisionResult:
+
+    # Keep a reference to the client throughout the request.
+    client = _get_client(api_key)
+
+    resp = client.models.generate_content(
+        model=GEMINI_MODEL,
+        contents=[
+            types.Part.from_bytes(
+                data=image_bytes,
+                mime_type=mime_type
+            ),
+            PROMPT.format(vocab=_vocabulary()),
+        ],
+        config=types.GenerateContentConfig(
+            response_mime_type="application/json",
+            response_schema=VisionResult,
+            temperature=0.1,
+        ),
+    )
+
+    if getattr(resp, "parsed", None) is not None:
+        return resp.parsed
+
+    return VisionResult.model_validate_json(resp.text)
